@@ -1,0 +1,17 @@
+drop table if exists devo.portfolios;
+create table devo.portfolios as ( 
+select *,
+case when lcvandef2017 >= lcvandef2016 and lcvandef2017 >= lcvandef2015 then lcvandef2017
+	when lcvandef2016 >= lcvandef2015 and lcvandef2016 >= lcvandef2017 then lcvandef2016
+    when lcvandef2015 >= lcvandef2016 and lcvandef2015 >= lcvandef2017 then lcvandef2015 else lcvandef2017 end as renewal,
+    
+    case when (lcvandef2017+gg2017) >= (lcvandef2016+gg2016) and (lcvandef2017+gg2017) >= (lcvandef2015+gg2015) then (lcvandef2017+gg2017)
+	when (lcvandef2016+gg2016) >= (lcvandef2015+gg2015) and (lcvandef2016+gg2016) >= (lcvandef2017+gg2017) then (lcvandef2016+gg2016)
+    when (lcvandef2015+gg2015) >= (lcvandef2016+gg2016) and (lcvandef2015+gg2015) >= (lcvandef2017+gg2017) then (lcvandef2015+gg2015) else (lcvandef2017+gg2017) end as RenewalGG, 
+    
+case when (targetscore>=8 or principalsolution = 'Tier 4') then 'Lead'
+when principalsolution in ('Tier 1', 'Tier 2', 'Tier 3') then 'Principal' else 'no' end as SuspectType
+    
+ from devo.summariesgv
+ where recordtype_hoh = 'Indiv_hoh'
+and deceased = 'f')
