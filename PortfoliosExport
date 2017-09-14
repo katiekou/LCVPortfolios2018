@@ -1,0 +1,34 @@
+select portfolio, 
+ sum(case when lcvandef2015 >=10000 then lcvandef2015 else 0 end) as allLCVentities2015,
+ sum(case when lcvandef2015 >=10000 then lcv2015 else 0 end) as lcv2015,
+ sum(case when lcvandef2015 >=10000 then ef2015 else 0 end) as edfund2015,
+
+sum(case when lcvandef2016 >=10000 then lcvandef2016 else 0 end) as allLCVentities2016,
+ sum(case when lcvandef2016 >=10000 then lcv2016 else 0 end) as lcv2016,
+ sum(case when lcvandef2016 >=10000 then ef2016 else 0 end) as edfund2016,
+
+sum(case when lcvandef2017 >=10000 then lcvandef2017 else 0 end) as allLCVentities2017,
+ sum(case when lcvandef2017 >=10000 then lcv2017 else 0 end) as lcv2017,
+ sum(case when lcvandef2017 >=10000 then ef2017 else 0 end) as edfund2017,
+
+sum(case when gg2015>=5000 then gg2015 else 0 end) as gg2015,
+sum(case when gg2016>=5000 then gg2016 else 0 end) as gg2016,
+sum(case when gg2017>=5000 then gg2017 else 0 end) as gg2017,
+
+sum(case when renewal between 10000 and 49999 then 1 else 0 end) as renewal1050,
+sum(case when renewal between 50000 and 99999 then 1 else 0 end) as renewal50100,
+sum(case when renewal >= 100000 then 1 else 0 end) as renewal100plus,
+
+sum(case when renewal < 10000 and renewalgg >= 10000 then 1 else 0 end) as GGRenewal,
+sum(case when renewal < 10000 and renewalgg < 10000 and prospectranking = 'Lead Prospect' then 1 else 0 end) as LeadProspects,
+sum(case when renewal < 10000 and renewalgg < 10000 and prospectranking = 'Principal Prospect' then 1 else 0 end) as PrincipalProspects,
+
+sum(case when renewal < 10000 and renewalgg < 10000 and (prospectranking = 'Suspect' or (renewal > 1 and prospectranking is null)) and suspecttype = 'Lead' then 1 else 0 end) as LikelyLead,
+sum(case when renewal < 10000 and renewalgg < 10000 and (prospectranking = 'Suspect' or (renewal > 1 and prospectranking is null)) and suspecttype = 'Principal' then 1 else 0 end) as LikelyPrincipal,
+
+
+sum(case when renewalgg = 0 and prospectranking is null and ranking is null and suspecttype = 'Lead' then 1 else 0 end) as DistantLead,
+sum(case when renewalgg = 0 and prospectranking is null and ranking is null and suspecttype = 'Principal' then 1 else 0 end) as DistantPrincipal
+
+from devo.portfolios
+group by portfolio
